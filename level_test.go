@@ -13,9 +13,9 @@ var tests = []struct {
 		in: Level{
 			headline: "the title",
 			position: 1,
-			text:     "the text",
+			text:     []string{"the text"},
 		},
-		out: "<h1>the title</h1><p class=\"level-1\">the text</p>",
+		out: "<h1>the title</h1><div class=\"level-1\"><p>the text</p></div>",
 	},
 	{
 		in: Level{
