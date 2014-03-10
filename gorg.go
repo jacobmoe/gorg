@@ -11,10 +11,13 @@ func scanFile(path string) {
 	tree := createTree(bufio.NewScanner(file))
 }
 
-func createTree(scanner Scanner, tree Tree, subtree Subtree) Tree {
-	var position int
-	var headline string
+func createTree(scanner Scanner) Tree {
+	var tree Tree
+	var subtree Subtree
 	var level Level
+	var headline string
+	var position int
+
 	var isNextLevel bool
 
 	for scanner.Scan() {
@@ -26,15 +29,10 @@ func createTree(scanner Scanner, tree Tree, subtree Subtree) Tree {
 			level = Level{headline: headline, position: position}
 
 			isNextLevel = subtree.lastLevel.position < position
+			subtree = subtree.addLevel(level)
 
-			if subtree.isEmpty() || isNextLevel {
-				subtree.addLevel(level)
-			} else {
-				createTree(
-					scanner,
-					tree,
-					Subtree{levels: []Level{Level{level}}},
-				)
+			if !subtree.isEmpty() || !isNextLevel {
+				tree.addSubtree(subtree)
 			}
 
 			level := Level{headline: submatch[1], position: 1}
@@ -49,5 +47,5 @@ func createTree(scanner Scanner, tree Tree, subtree Subtree) Tree {
 		}
 	}
 
-	return tree
+	return tree.addSubtree(subtree)
 }
