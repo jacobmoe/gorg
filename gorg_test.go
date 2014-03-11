@@ -1,11 +1,11 @@
 package gorg
 
 import (
-	"fmt"
+	"path/filepath"
 	"testing"
 )
 
-func TestScanFile(t *testing.T) {
-	fmt.Println("testing scanFile")
-	// scanFile("test/test_file.org")
+func TestCreateTree(t *testing.T) {
+	path, _ := filepath.Abs("test/test_file.org")
+	createTree(path)
 }

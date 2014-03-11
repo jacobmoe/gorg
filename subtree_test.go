@@ -33,7 +33,43 @@ func TestAddLevel(t *testing.T) {
 	}
 
 	assert.Equal(t, s, expected)
+}
 
+func TestLastLevel(t *testing.T) {
+	var subtree Subtree
+	assert.Equal(t, subtree.lastLevel(), Level{})
+
+	level := Level{
+		headline: "headline1",
+		position: 1,
+		text:     []string{"text1"},
+	}
+
+	subtree = subtree.addLevel(level)
+	assert.Equal(t, subtree.lastLevel(), level)
+
+	level = Level{
+		headline: "headline2",
+		position: 2,
+		text:     []string{"text2"},
+	}
+
+	subtree = subtree.addLevel(level)
+	assert.Equal(t, subtree.lastLevel(), level)
+}
+
+func TestIsEmpty(t *testing.T) {
+	var subtree Subtree
+	assert.True(t, subtree.isEmpty())
+
+	level := Level{
+		headline: "headline1",
+		position: 1,
+		text:     []string{"text1"},
+	}
+
+	subtree = subtree.addLevel(level)
+	assert.False(t, subtree.isEmpty())
 }
 
 func TestSubtreeToHtml(t *testing.T) {

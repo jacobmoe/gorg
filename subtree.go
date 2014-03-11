@@ -17,7 +17,11 @@ func (self Subtree) isEmpty() bool {
 }
 
 func (self Subtree) lastLevel() Level {
-	return self.levels[len(self.levels-1)]
+	if self.isEmpty() {
+		return Level{}
+	}
+
+	return self.levels[len(self.levels)-1]
 }
 
 func (self Subtree) toHtml() string {

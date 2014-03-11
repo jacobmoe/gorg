@@ -2,16 +2,13 @@ package gorg
 
 import (
 	"bufio"
-	"fmt"
 	"os"
+	"regexp"
 )
 
-func scanFile(path string) {
+func createTree(path string) Tree {
 	file, _ := os.Open(path)
-	tree := createTree(bufio.NewScanner(file))
-}
-
-func createTree(scanner Scanner) Tree {
+	scanner := bufio.NewScanner(file)
 	var tree Tree
 	var subtree Subtree
 	var level Level
@@ -21,28 +18,30 @@ func createTree(scanner Scanner) Tree {
 	var isNextLevel bool
 
 	for scanner.Scan() {
-		r, _ := regexp.Compile(`\A(\**\) (.*)`)
-		submatch := r.FindStringSubmatch(scanner.Text())
+		line := scanner.Text()
+		r, _ := regexp.Compile(`\A(\**)\ (.*)`)
+		submatch := r.FindStringSubmatch(line)
+
 		if len(submatch) > 1 {
 			headline = submatch[2]
 			position = len(submatch[1])
 			level = Level{headline: headline, position: position}
 
-			isNextLevel = subtree.lastLevel.position < position
+			isNextLevel = subtree.lastLevel().position < position
 			subtree = subtree.addLevel(level)
 
 			if !subtree.isEmpty() || !isNextLevel {
 				tree.addSubtree(subtree)
 			}
 
-			level := Level{headline: submatch[1], position: 1}
-			subtree = subtree.addLevel()
+			level = Level{headline: submatch[1], position: 1}
+			subtree = subtree.addLevel(level)
 		} else {
 			if subtree.isEmpty() {
-				subtree.addLevel(Level{text: line})
+				subtree.addLevel(Level{text: []string{line}})
 			} else {
-				text := subtree.lastLevel.text
-				subtree.lastLevel.text = text + "<br />" + line
+				lastLevel := subtree.lastLevel()
+				lastLevel.text = append(lastLevel.text, line)
 			}
 		}
 	}
