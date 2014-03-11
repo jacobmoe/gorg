@@ -15,8 +15,6 @@ func createTree(path string) Tree {
 	var headline string
 	var position int
 
-	var isNextLevel bool
-
 	for scanner.Scan() {
 		line := scanner.Text()
 		r, _ := regexp.Compile(`\A(\**)\ (.*)`)
@@ -27,15 +25,11 @@ func createTree(path string) Tree {
 			position = len(submatch[1])
 			level = Level{headline: headline, position: position}
 
-			isNextLevel = subtree.lastLevel().position < position
 			subtree = subtree.addLevel(level)
 
-			if !subtree.isEmpty() || !isNextLevel {
+			if subtree.lastLevel().position < position {
 				tree.addSubtree(subtree)
 			}
-
-			level = Level{headline: submatch[1], position: 1}
-			subtree = subtree.addLevel(level)
 		} else {
 			if subtree.isEmpty() {
 				subtree.addLevel(Level{text: []string{line}})

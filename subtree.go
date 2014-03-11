@@ -16,7 +16,7 @@ func (self Subtree) isEmpty() bool {
 	return len(self.levels) == 0
 }
 
-func (self Subtree) lastLevel() Level {
+func (self *Subtree) lastLevel() Level {
 	if self.isEmpty() {
 		return Level{}
 	}
