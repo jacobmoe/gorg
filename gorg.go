@@ -25,14 +25,14 @@ func createTree(path string) Tree {
 			position = len(submatch[1])
 			level = Level{headline: headline, position: position}
 
-			subtree = subtree.addLevel(level)
+			subtree.addLevel(&level)
 
 			if subtree.lastLevel().position < position {
 				tree.addSubtree(subtree)
 			}
 		} else {
 			if subtree.isEmpty() {
-				subtree.addLevel(Level{text: []string{line}})
+				subtree.addLevel(&Level{text: []string{line}})
 			} else {
 				lastLevel := subtree.lastLevel()
 				lastLevel.text = append(lastLevel.text, line)

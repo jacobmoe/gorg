@@ -14,12 +14,12 @@ func TestTreeToHtml(t *testing.T) {
 			in: Tree{
 				subtrees: []Subtree{
 					Subtree{
-						levels: []Level{
-							Level{
+						levels: []*Level{
+							&Level{
 								headline: "headline1.1",
 								position: 1,
 							},
-							Level{
+							&Level{
 								headline: "headline1.2",
 								position: 2,
 								text:     []string{"text1.2"},
@@ -27,13 +27,13 @@ func TestTreeToHtml(t *testing.T) {
 						},
 					},
 					Subtree{
-						levels: []Level{
-							Level{
+						levels: []*Level{
+							&Level{
 								headline: "headline2.1",
 								position: 1,
 								text:     []string{"text2.1"},
 							},
-							Level{
+							&Level{
 								headline: "headline2.2",
 								position: 2,
 								text:     []string{"text2.2"},
@@ -42,7 +42,7 @@ func TestTreeToHtml(t *testing.T) {
 					},
 				},
 			},
-			out: "<div class=\"tree\"><div class=\"subtree\"><h1>headline1.1</h1><h2>headline1.2</h2><div class=\"level-2\"><p>text1.2</p></div></div><div class=\"subtree\"><h1>headline2.1</h1><div class=\"level-1\"><p>text2.1</p></div><h2>headline2.2</h2><div class=\"level-2\"><p>text2.2</p></div></div></div>",
+			out: "<div class=\"tree\"><div class=\"subtrees\"><h1>headline1.1</h1><h2>headline1.2</h2><div class=\"level-2\"><p>text1.2</p></div></div><div class=\"subtrees\"><h1>headline2.1</h1><div class=\"level-1\"><p>text2.1</p></div><h2>headline2.2</h2><div class=\"level-2\"><p>text2.2</p></div></div></div>",
 		},
 	}
 
