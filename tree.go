@@ -6,8 +6,9 @@ type Tree struct {
 	subtrees []Subtree
 }
 
-func (self Tree) addSubtree(subtree Subtree) Tree {
-	return Tree{subtrees: append(self.subtrees, subtree)}
+func (self *Tree) addSubtree(subtree *Subtree) {
+	subtree.tree = self
+	tree.subtrees = append(self.subtrees, subtree)
 }
 
 func (self *Tree) toHtml() string {
