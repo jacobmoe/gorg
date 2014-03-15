@@ -1,21 +1,14 @@
 package gorg
 
-import "fmt"
-
 type Tree struct {
-	subtrees []Subtree
+	nodes []*Node
 }
 
-func (self *Tree) addSubtree(subtree *Subtree) {
-	subtree.tree = self
-	tree.subtrees = append(self.subtrees, subtree)
+func (self Tree) addNode(node *Node) {
+	node.parent = node.findParent(self)
+	self.nodes = append(self.nodes, node)
 }
 
-func (self *Tree) toHtml() string {
-	var html = "<div class=\"tree\">"
-	for _, subtree := range self.subtrees {
-		html = fmt.Sprintf("%s%s", html, subtree.toHtml())
-	}
-
-	return fmt.Sprintf("%s</div>", html)
+func (self Tree) isEmpty() bool {
+	return len(self.nodes) == 0
 }

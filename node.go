@@ -4,27 +4,38 @@ import (
 	"fmt"
 )
 
-// a level represents an org-mode headline, including following text
 // text can be comprised of multiple lines
 // position is the headline's asterisk count
-type Level struct {
+type Node struct {
 	headline string
 	position int
-	text     []string
+	section  []string
+	parent   *Node
+}
+
+func (self *Node) findParent(tree Tree) *Node {
+	if tree.isEmpty() {
+		return nil
+	} else if tree.nodes[len(tree.nodes)-1].position < self.position {
+		return tree.nodes[len(tree.nodes)-1]
+	} else {
+		tree.nodes = tree.nodes[0 : len(tree.nodes)-1]
+		return self.findParent(tree)
+	}
 }
 
 // the headline gets an <h?> tag, with ? determined by the position
 // each line of text is a paragraph within a level div
-func (self Level) toHtml() string {
+func (self Node) toHtml() string {
 	position := self.position
 	if position == 0 {
 		position = 1
 	}
 
 	var body string
-	if len(self.text) > 0 {
+	if len(self.section) > 0 {
 		var text string
-		for _, line := range self.text {
+		for _, line := range self.section {
 			text = fmt.Sprintf("%s<p>%s</p>", text, line)
 		}
 
