@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-// text can be comprised of multiple lines
+// Node represents a org-mode headline with a following section
+// a section can be comprised of multiple lines
 // position is the headline's asterisk count
 type Node struct {
 	headline string
