@@ -1,6 +1,8 @@
 package gorg
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Tree struct {
 	nodes []*Node

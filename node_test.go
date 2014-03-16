@@ -74,8 +74,9 @@ func TestNodeToHtml(t *testing.T) {
 		{
 			in: Node{
 				headline: "the headline3",
+				position: 4,
 			},
-			out: "<h1>the headline3</h1>",
+			out: "<h4>the headline3</h4>",
 		},
 	}
 

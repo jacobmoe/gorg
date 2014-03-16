@@ -28,9 +28,17 @@ func (self *Node) findParent(tree Tree) *Node {
 // the headline gets an <h?> tag, with ? determined by the position
 // each line of text is a paragraph within a level div
 func (self Node) toHtml() string {
-	position := self.position
-	if position == 0 {
-		position = 1
+	var header string
+	position := 1
+
+	if self.position != 0 {
+		position = self.position
+		header = fmt.Sprintf(
+			"<h%d>%s</h%d>",
+			position,
+			self.headline,
+			position,
+		)
 	}
 
 	var body string
@@ -47,11 +55,5 @@ func (self Node) toHtml() string {
 		)
 	}
 
-	return fmt.Sprintf(
-		"<h%d>%s</h%d>%s",
-		position,
-		self.headline,
-		position,
-		body,
-	)
+	return fmt.Sprintf("%s%s", header, body)
 }
