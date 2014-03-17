@@ -13,39 +13,37 @@ func TestFindParent(t *testing.T) {
 	var expected *Node
 	var parent *Node
 
-	testTree := Tree{
-		nodes: []*Node{
-			&Node{headline: "headline1", position: 1},
-			&Node{headline: "headline2", position: 2},
-			&Node{headline: "headline3", position: 3},
-			&Node{headline: "headline4", position: 4},
-			&Node{headline: "headline5", position: 3},
-			&Node{headline: "headline6", position: 4},
-		},
+	nodes := []*Node{
+		&Node{headline: "headline1", position: 1},
+		&Node{headline: "headline2", position: 2},
+		&Node{headline: "headline3", position: 3},
+		&Node{headline: "headline4", position: 4},
+		&Node{headline: "headline5", position: 3},
+		&Node{headline: "headline6", position: 4},
 	}
 
 	node = Node{position: 1}
-	parent = node.findParent(testTree)
+	parent = node.findParent(nodes)
 	assert.Equal(t, parent, expected)
 
 	node = Node{position: 2}
-	parent = node.findParent(testTree)
-	expected = testTree.nodes[0]
+	parent = node.findParent(nodes)
+	expected = nodes[0]
 	assert.Equal(t, parent, expected)
 
 	node = Node{position: 3}
-	parent = node.findParent(testTree)
-	expected = testTree.nodes[1]
+	parent = node.findParent(nodes)
+	expected = nodes[1]
 	assert.Equal(t, parent, expected)
 
 	node = Node{position: 4}
-	parent = node.findParent(testTree)
-	expected = testTree.nodes[4]
+	parent = node.findParent(nodes)
+	expected = nodes[4]
 	assert.Equal(t, parent, expected)
 
 	node = Node{position: 5}
-	parent = node.findParent(testTree)
-	expected = testTree.nodes[5]
+	parent = node.findParent(nodes)
+	expected = nodes[5]
 	assert.Equal(t, parent, expected)
 }
 

@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// Node represents a org-mode headline with a following section
+// Node represents an org-mode headline with a following section
 // a section can be comprised of multiple lines
 // position is the headline's asterisk count
 type Node struct {
@@ -14,14 +14,14 @@ type Node struct {
 	parent   *Node
 }
 
-func (self *Node) findParent(tree Tree) *Node {
-	if tree.isEmpty() {
+func (self *Node) findParent(nodes []*Node) *Node {
+	if len(nodes) == 0 {
 		return nil
-	} else if tree.nodes[len(tree.nodes)-1].position < self.position {
-		return tree.nodes[len(tree.nodes)-1]
+	} else if nodes[len(nodes)-1].position < self.position {
+		return nodes[len(nodes)-1]
 	} else {
-		tree.nodes = tree.nodes[0 : len(tree.nodes)-1]
-		return self.findParent(tree)
+		nodes = nodes[0 : len(nodes)-1]
+		return self.findParent(nodes)
 	}
 }
 

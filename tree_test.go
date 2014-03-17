@@ -65,7 +65,37 @@ func TestAddNode(t *testing.T) {
 	assert.Equal(t, tree.nodes[4].parent, node4)
 }
 
+func TestAddSubtree(t *testing.T) {
+	fmt.Println("==== Tree TestSubtree")
+
+	var tree Tree
+
+	subtree1 := Tree{nodes: []*Node{&Node{headline: "test"}}}
+	tree.addSubtree(&subtree1)
+
+	subtree2 := Tree{nodes: []*Node{&Node{headline: "test"}}}
+	tree.addSubtree(&subtree2)
+
+	subtree3 := Tree{nodes: []*Node{&Node{headline: "test"}}}
+	tree.addSubtree(&subtree3)
+
+	subtree4 := Tree{nodes: []*Node{&Node{headline: "test"}}}
+	tree.addSubtree(&subtree4)
+
+	assert.Equal(t, tree.subtrees[0], &subtree1)
+	assert.Equal(t, tree.subtrees[1], &subtree2)
+	assert.Equal(t, tree.subtrees[2], &subtree3)
+	assert.Equal(t, tree.subtrees[3], &subtree4)
+
+	assert.Equal(t, tree.subtrees[0].parent, &tree)
+	assert.Equal(t, tree.subtrees[1].parent, &tree)
+	assert.Equal(t, tree.subtrees[2].parent, &tree)
+	assert.Equal(t, tree.subtrees[3].parent, &tree)
+}
+
 func TestTreeToHtml(t *testing.T) {
+	fmt.Println("==== Tree TestTreeToHtml")
+
 	node1 := &Node{headline: "headline1", position: 1}
 	node2 := &Node{
 		headline: "headline2",
@@ -104,5 +134,108 @@ func TestTreeToHtml(t *testing.T) {
 		actual := test.in.toHtml()
 		assert.Equal(t, test.out, actual)
 	}
+
+}
+
+func TestIndexOfNode(t *testing.T) {
+	fmt.Println("==== Tree TestIndexOfNode")
+
+	node1 := &Node{headline: "headline1", position: 1}
+	node2 := &Node{headline: "headline2", position: 2}
+	node3 := &Node{headline: "headline3", position: 3}
+	node4 := &Node{headline: "headline4", position: 4}
+
+	tree := Tree{nodes: []*Node{node1, node2, node3, node4}}
+
+	assert.Equal(t, tree.indexOfNode(node4), 3)
+	assert.Equal(t, tree.indexOfNode(node1), 0)
+	assert.Equal(t, tree.indexOfNode(node2), 1)
+	assert.Equal(t, tree.indexOfNode(node3), 2)
+}
+
+func TestDeleteNode(t *testing.T) {
+	fmt.Println("==== Tree TestDeleteNode")
+
+	node1 := &Node{headline: "headline1", position: 1}
+	node2 := &Node{headline: "headline2", position: 2}
+	node3 := &Node{headline: "headline3", position: 3}
+	node4 := &Node{headline: "headline4", position: 4}
+
+	tree := Tree{nodes: []*Node{node1, node2, node3, node4}}
+
+	assert.Equal(t, len(tree.nodes), 4)
+
+	tree.deleteNode(node2)
+
+	assert.Equal(t, len(tree.nodes), 3)
+	assert.Equal(t, tree.nodes[0].headline, "headline1")
+	assert.Equal(t, tree.nodes[1].headline, "headline3")
+	assert.Equal(t, tree.nodes[2].headline, "headline4")
+
+	tree.deleteNode(node1)
+
+	assert.Equal(t, len(tree.nodes), 2)
+	assert.Equal(t, tree.nodes[0].headline, "headline3")
+	assert.Equal(t, tree.nodes[1].headline, "headline4")
+
+	tree.deleteNode(node4)
+
+	assert.Equal(t, len(tree.nodes), 1)
+	assert.Equal(t, tree.nodes[0].headline, "headline3")
+
+	tree.deleteNode(node3)
+
+	assert.Equal(t, len(tree.nodes), 0)
+}
+
+func TestUnflattenTree(t *testing.T) {
+	fmt.Println("==== Tree TestUnflattenTree")
+
+	var tree Tree
+
+	tree.addNode(&Node{headline: "sub1.1.1", position: 1})
+	tree.addNode(&Node{headline: "sub1.1.2", position: 2})
+	tree.addNode(&Node{headline: "sub1.1.3", position: 3})
+	tree.addNode(&Node{headline: "sub2.1.1", position: 1})
+	tree.addNode(&Node{headline: "sub2.1.2", position: 3})
+	tree.addNode(&Node{headline: "sub2.2.1", position: 4})
+	tree.addNode(&Node{headline: "sub2.2.2", position: 5})
+	tree.addNode(&Node{headline: "sub2.3.1", position: 4})
+	tree.addNode(&Node{headline: "sub2.3.2", position: 5})
+	tree.addNode(&Node{headline: "sub2.3.3", position: 6})
+	tree.addNode(&Node{headline: "sub2.4.1", position: 4})
+	tree.addNode(&Node{headline: "sub2.4.2", position: 5})
+
+	//  * sub1.1.1
+	//  ** sub1.1.2
+	//  *** sub1.1.3
+	//  * sub2.1.1
+	//  *** sub2.1.2
+	//  **** sub2.2.1
+	//  ***** sub2.2.2
+	//  **** sub2.3.1
+	//  ***** sub2.3.2
+	//  ****** sub2.3.3
+	//  **** sub2.4.1
+	//  ***** sub2.4.2
+
+	tree.unflatten()
+
+	assert.Equal(t, len(tree.nodes), 0)
+	assert.Equal(t, len(tree.subtrees), 2)
+
+	sub11 := tree.subtrees[0]
+	assert.Equal(t, len(sub11.nodes), 3)
+	assert.Equal(t, len(sub11.subtrees), 0)
+
+	assert.Equal(t, sub11.nodes[0].headline, "sub1.1.1")
+	assert.Equal(t, sub11.nodes[1].headline, "sub1.1.2")
+	assert.Equal(t, sub11.nodes[2].headline, "sub1.1.3")
+
+	sub21 := tree.subtrees[1]
+	assert.Equal(t, len(sub21.nodes), 9)
+	assert.Equal(t, len(sub21.subtrees), 0)
+
+	assert.Equal(t, sub21.nodes[0].headline, "sub2.1.1")
 
 }

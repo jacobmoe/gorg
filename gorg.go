@@ -13,18 +13,20 @@ func check(e error) {
 	}
 }
 
-func OrgToHtml(orgPath string, htmlPath string) {
-	var html string
-
-	html = createTree(orgPath).toHtml()
-
-	byteHtml := []byte(html)
+func OrgToHtmlFile(orgPath string, htmlPath string) {
+	byteHtml := []byte(OrgToHtml(orgPath))
 
 	err := ioutil.WriteFile(htmlPath, byteHtml, 0644)
 	check(err)
 }
 
-func createTree(path string) Tree {
+func OrgToHtml(orgPath string) string {
+	tree := Tree{nodes: nodesFromFile(orgPath)}
+
+	return tree.toHtml()
+}
+
+func nodesFromFile(path string) []*Node {
 	file, err := os.Open(path)
 	check(err)
 
@@ -33,8 +35,8 @@ func createTree(path string) Tree {
 	}()
 
 	scanner := bufio.NewScanner(file)
-	var tree Tree
 	var node *Node
+	var nodes []*Node
 	var headline string
 	var position int
 
@@ -48,16 +50,17 @@ func createTree(path string) Tree {
 			position = len(submatch[1])
 			node = &Node{headline: headline, position: position}
 
-			tree.addNode(node)
+			node.parent = node.findParent(nodes)
+			nodes = append(nodes, node)
 		} else {
-			if tree.isEmpty() {
-				tree.addNode(&Node{section: []string{line}})
+			if len(nodes) == 0 {
+				nodes = []*Node{&Node{section: []string{line}}}
 			} else {
-				lastLevel := tree.lastNode()
-				lastLevel.section = append(lastLevel.section, line)
+				lastNode := nodes[len(nodes)-1]
+				lastNode.section = append(lastNode.section, line)
 			}
 		}
 	}
 
-	return tree
+	return nodes
 }
