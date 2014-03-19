@@ -35,6 +35,7 @@ func (self Tree) lastNode() *Node {
 
 func (self Tree) toHtml() string {
 	var html = "<div class=\"tree\">"
+
 	html = self.subtreesToHtml(html)
 
 	return fmt.Sprintf("%s%s", html, "</div>")
@@ -46,6 +47,13 @@ func (self Tree) subtreesToHtml(html string) string {
 	}
 
 	for _, subtree := range self.subtrees {
+		html = fmt.Sprintf(
+			"%s%s%s",
+			"<div class=\"subtree\">",
+			html,
+			"</div>",
+		)
+
 		html = subtree.subtreesToHtml(html)
 	}
 

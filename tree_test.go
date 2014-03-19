@@ -118,15 +118,15 @@ func TestTreeToHtml(t *testing.T) {
 		section:  []string{"the section for node6", "some more text"},
 	}
 
+	nodes := []*Node{node1, node2, node3, node4, node5, node6}
+
 	var tests = []struct {
 		in  Tree
 		out string
 	}{
 		{
-			in: Tree{
-				nodes: []*Node{node1, node2, node3, node4, node5, node6},
-			},
-			out: "<div class=\"tree\"><h1>headline1</h1><h2>headline2</h2><div class=\"level-2\"><p>the section for node2</p></div><h3>headline3</h3><h4>headline4</h4><div class=\"level-4\"><p>the section for node4</p></div><h3>headline5</h3><h4>headline6</h4><div class=\"level-4\"><p>the section for node6</p><p>some more text</p></div></div>",
+			in:  *NewTree(nodes),
+			out: "<iv class=\"tree\"><h1>headline1</h1><h2>headline2</h2><div class=\"level-2\"><p>the section for node2</p></div><h3>headline3</h3><h4>headline4</h4><div class=\"level-4\"><p>the section for node4</p></div><h3>headline5</h3><h4>headline6</h4><div class=\"level-4\"><p>the section for node6</p><p>some more text</p></div></div>",
 		},
 	}
 
