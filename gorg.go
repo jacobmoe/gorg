@@ -21,7 +21,7 @@ func OrgToHtmlFile(orgPath string, htmlPath string) {
 }
 
 func OrgToHtml(orgPath string) string {
-	tree := Tree{nodes: nodesFromFile(orgPath)}
+	tree := NewTree(nodesFromFile(orgPath))
 
 	return tree.toHtml()
 }

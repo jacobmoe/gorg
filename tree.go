@@ -8,6 +8,13 @@ type Tree struct {
 	parent   *Tree
 }
 
+func NewTree(nodes []*Node) *Tree {
+	tree := Tree{nodes: nodes}
+	tree.unflatten()
+
+	return &tree
+}
+
 func (self *Tree) addNode(node *Node) {
 	node.parent = node.findParent(self.nodes)
 	self.nodes = append(self.nodes, node)
@@ -27,21 +34,19 @@ func (self Tree) lastNode() *Node {
 }
 
 func (self Tree) toHtml() string {
-	var html string
+	var html = "<div class=\"tree\">"
+	html = self.subtreesToHtml(html)
+
+	return fmt.Sprintf("%s%s", html, "</div>")
+}
+
+func (self Tree) subtreesToHtml(html string) string {
 	for _, node := range self.nodes {
-		if node.parent == nil {
-			if node != self.nodes[0] {
-				html = html + "</div>"
-			}
-
-			html = html + "<div class=\"tree\">"
-		}
-
 		html = fmt.Sprintf("%s%s", html, node.toHtml())
+	}
 
-		if node == self.lastNode() {
-			html = fmt.Sprintf("%s</div>", html)
-		}
+	for _, subtree := range self.subtrees {
+		html = subtree.subtreesToHtml(html)
 	}
 
 	return html
@@ -90,6 +95,7 @@ func (self *Tree) unflatten() {
 }
 
 func getSubtrees(ns []*Node) []*Tree {
+
 	if len(ns) == 1 {
 		return []*Tree{}
 	}
@@ -120,5 +126,4 @@ func getSubtrees(ns []*Node) []*Tree {
 	} else {
 		return getSubtrees(nodes)
 	}
-
 }
