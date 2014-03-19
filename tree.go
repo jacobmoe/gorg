@@ -74,11 +74,30 @@ func (self *Tree) deleteNode(node *Node) {
 }
 
 func (self *Tree) unflatten() {
-	root := self.nodes[0]
-	nodes := self.nodes[1:]
+	subtrees := getSubtrees(self.nodes)
+
+	for _, s := range subtrees {
+		self.addSubtree(s)
+
+		for _, n := range s.nodes {
+			self.deleteNode(n)
+		}
+	}
+
+	for _, subtree := range self.subtrees {
+		subtree.unflatten()
+	}
+}
+
+func getSubtrees(ns []*Node) []*Tree {
+	if len(ns) == 1 {
+		return []*Tree{}
+	}
+
+	root := ns[0]
+	nodes := ns[1:]
 
 	subtree := &Tree{nodes: []*Node{root}}
-
 	var subtrees []*Tree
 
 	for _, node := range nodes {
@@ -97,16 +116,9 @@ func (self *Tree) unflatten() {
 	}
 
 	if len(subtrees) > 1 {
-		for _, s := range subtrees {
-			self.addSubtree(s)
-
-			for _, n := range s.nodes {
-				self.deleteNode(n)
-			}
-		}
+		return subtrees
+	} else {
+		return getSubtrees(nodes)
 	}
 
-	for _, subtree := range self.subtrees {
-		subtree.unflatten()
-	}
 }
