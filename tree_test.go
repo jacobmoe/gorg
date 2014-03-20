@@ -126,7 +126,7 @@ func TestTreeToHtml(t *testing.T) {
 	}{
 		{
 			in:  *NewTree(nodes),
-			out: "<iv class=\"tree\"><h1>headline1</h1><h2>headline2</h2><div class=\"level-2\"><p>the section for node2</p></div><h3>headline3</h3><h4>headline4</h4><div class=\"level-4\"><p>the section for node4</p></div><h3>headline5</h3><h4>headline6</h4><div class=\"level-4\"><p>the section for node6</p><p>some more text</p></div></div>",
+			out: "<div class=\"subtree\"><h1>headline1</h1><h2>headline2</h2><div class=\"level-2\"><p>the section for node2</p></div><div class=\"subtree\"><h3>headline3</h3><h4>headline4</h4><div class=\"level-4\"><p>the section for node4</p></div></div><div class=\"subtree\"><h3>headline5</h3><h4>headline6</h4><div class=\"level-4\"><p>the section for node6</p><p>some more text</p></div></div></div>",
 		},
 	}
 

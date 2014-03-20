@@ -29,15 +29,13 @@ func (self *Node) findParent(nodes []*Node) *Node {
 // each line of text is a paragraph within a level div
 func (self Node) toHtml() string {
 	var header string
-	position := 1
 
 	if self.position != 0 {
-		position = self.position
 		header = fmt.Sprintf(
 			"<h%d>%s</h%d>",
-			position,
+			self.position,
 			self.headline,
-			position,
+			self.position,
 		)
 	}
 
@@ -50,7 +48,7 @@ func (self Node) toHtml() string {
 
 		body = fmt.Sprintf(
 			"<div class=\"level-%d\">%s</div>",
-			position,
+			self.position,
 			text,
 		)
 	}
