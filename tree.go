@@ -116,7 +116,12 @@ func getSubtrees(ns []*Node) []*Tree {
 			subtrees = append(subtrees, subtree)
 
 			root = node
+
 			subtree = &Tree{nodes: []*Node{root}}
+
+			if node == nodes[len(nodes)-1] {
+				subtrees = append(subtrees, subtree)
+			}
 		}
 	}
 
@@ -124,5 +129,21 @@ func getSubtrees(ns []*Node) []*Tree {
 		return subtrees
 	} else {
 		return getSubtrees(nodes)
+	}
+}
+
+func printTree(tree Tree) {
+	for _, node := range tree.nodes {
+		line := ""
+		for i := 0; i < node.position; i++ {
+			line = line + "*"
+		}
+
+		line = line + " " + node.headline
+		fmt.Println(line)
+	}
+
+	for _, subtree := range tree.subtrees {
+		printTree(*subtree)
 	}
 }

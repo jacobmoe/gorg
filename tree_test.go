@@ -206,6 +206,7 @@ func TestUnflattenTree(t *testing.T) {
 	tree.addNode(&Node{headline: "sub2.3.3", position: 6})
 	tree.addNode(&Node{headline: "sub2.4.1", position: 4})
 	tree.addNode(&Node{headline: "sub2.4.2", position: 5})
+	tree.addNode(&Node{headline: "sub3.1.1", position: 1})
 
 	//  ** sub0.1.1
 	//  * sub1.1.1
@@ -220,11 +221,14 @@ func TestUnflattenTree(t *testing.T) {
 	//  ****** sub2.3.3
 	//  **** sub2.4.1
 	//  ***** sub2.4.2
+	//  * sub3.1.1
 
 	tree.unflatten()
 
+	printTree(tree)
+
 	assert.Equal(t, len(tree.nodes), 0)
-	assert.Equal(t, len(tree.subtrees), 3)
+	assert.Equal(t, len(tree.subtrees), 4)
 
 	sub01 := tree.subtrees[0]
 	assert.Equal(t, len(sub01.nodes), 1)
@@ -268,4 +272,43 @@ func TestUnflattenTree(t *testing.T) {
 
 	assert.Equal(t, sub24.nodes[0].headline, "sub2.4.1")
 	assert.Equal(t, sub24.nodes[1].headline, "sub2.4.2")
+
+	sub31 := tree.subtrees[3]
+	assert.Equal(t, len(sub31.nodes), 1)
+	assert.Equal(t, len(sub31.subtrees), 0)
+
+	assert.Equal(t, sub31.nodes[0].headline, "sub3.1.1")
+}
+
+func ttt(ns []*Node) []*Tree {
+	if len(ns) == 1 {
+		return []*Tree{}
+	}
+
+	root := ns[0]
+	nodes := ns[1:]
+
+	subtree := &Tree{nodes: []*Node{root}}
+	var subtrees []*Tree
+
+	for _, node := range nodes {
+
+		if node.position > root.position {
+			subtree.addNode(node)
+
+			if node == nodes[len(nodes)-1] {
+				subtrees = append(subtrees, subtree)
+			}
+		} else {
+			subtrees = append(subtrees, subtree)
+
+			root = node
+			if node == nodes[len(nodes)-1] {
+				subtrees = append(subtrees, &Tree{nodes: []*Node{root}})
+			}
+
+		}
+	}
+
+	return subtrees
 }
