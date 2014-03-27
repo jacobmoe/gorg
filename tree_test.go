@@ -278,36 +278,3 @@ func TestUnflattenTree(t *testing.T) {
 
 	assert.Equal(t, sub31.nodes[0].headline, "sub3.1.1")
 }
-
-func ttt(ns []*Node) []*Tree {
-	if len(ns) == 1 {
-		return []*Tree{}
-	}
-
-	root := ns[0]
-	nodes := ns[1:]
-
-	subtree := &Tree{nodes: []*Node{root}}
-	var subtrees []*Tree
-
-	for _, node := range nodes {
-
-		if node.position > root.position {
-			subtree.addNode(node)
-
-			if node == nodes[len(nodes)-1] {
-				subtrees = append(subtrees, subtree)
-			}
-		} else {
-			subtrees = append(subtrees, subtree)
-
-			root = node
-			if node == nodes[len(nodes)-1] {
-				subtrees = append(subtrees, &Tree{nodes: []*Node{root}})
-			}
-
-		}
-	}
-
-	return subtrees
-}
