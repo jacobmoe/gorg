@@ -17,6 +17,11 @@ func NewTree(nodes []*Node) *Tree {
 
 func (self *Tree) addNode(node *Node) {
 	node.parent = node.findParent(self.nodes)
+
+	if node.position == 0 {
+		node.position = 1
+	}
+
 	self.nodes = append(self.nodes, node)
 }
 
@@ -34,21 +39,35 @@ func (self Tree) lastNode() *Node {
 }
 
 func (self Tree) toHtml() string {
-	return self.subtreesToHtml("")
+	var html string
+
+	// if top level of tree has nodes,
+	// top is one, collapsible subtree
+	if len(self.nodes) > 1 {
+		html = "<div class=\"subtree\">"
+	}
+	html = self.subtreesToHtml(html)
+
+	if len(self.nodes) > 1 {
+		html = html + "</div>"
+	}
+
+	return html
 }
 
 func (self Tree) subtreesToHtml(html string) string {
-	html = html + "<div class=\"subtree\">"
 
 	for _, node := range self.nodes {
 		html = fmt.Sprintf("%s%s", html, node.toHtml())
 	}
 
 	for _, subtree := range self.subtrees {
+		html = html + "<div class=\"subtree\">"
 		html = subtree.subtreesToHtml(html)
+		html = html + "</div>"
 	}
 
-	return fmt.Sprintf("%s%s", html, "</div>")
+	return html
 }
 
 func (self *Tree) indexOfNode(searchNode *Node) int {
@@ -108,10 +127,6 @@ func getSubtrees(ns []*Node) []*Tree {
 	for _, node := range nodes {
 		if node.position > root.position {
 			subtree.addNode(node)
-
-			if node == nodes[len(nodes)-1] {
-				subtrees = append(subtrees, subtree)
-			}
 		} else {
 			subtrees = append(subtrees, subtree)
 
@@ -119,9 +134,10 @@ func getSubtrees(ns []*Node) []*Tree {
 
 			subtree = &Tree{nodes: []*Node{root}}
 
-			if node == nodes[len(nodes)-1] {
-				subtrees = append(subtrees, subtree)
-			}
+		}
+
+		if node == nodes[len(nodes)-1] {
+			subtrees = append(subtrees, subtree)
 		}
 	}
 

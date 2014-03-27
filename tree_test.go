@@ -119,20 +119,21 @@ func TestTreeToHtml(t *testing.T) {
 	}
 
 	nodes := []*Node{node1, node2, node3, node4, node5, node6}
+	tree := NewTree(nodes)
+	html := tree.toHtml()
 
 	var tests = []struct {
-		in  Tree
+		in  string
 		out string
 	}{
 		{
-			in:  *NewTree(nodes),
+			in:  html,
 			out: "<div class=\"subtree\"><h1>headline1</h1><h2>headline2</h2><div class=\"level-2\"><p>the section for node2</p></div><div class=\"subtree\"><h3>headline3</h3><h4>headline4</h4><div class=\"level-4\"><p>the section for node4</p></div></div><div class=\"subtree\"><h3>headline5</h3><h4>headline6</h4><div class=\"level-4\"><p>the section for node6</p><p>some more text</p></div></div></div>",
 		},
 	}
 
 	for _, test := range tests {
-		actual := test.in.toHtml()
-		assert.Equal(t, test.out, actual)
+		assert.Equal(t, test.out, test.in)
 	}
 
 }
@@ -224,8 +225,6 @@ func TestUnflattenTree(t *testing.T) {
 	//  * sub3.1.1
 
 	tree.unflatten()
-
-	printTree(tree)
 
 	assert.Equal(t, len(tree.nodes), 0)
 	assert.Equal(t, len(tree.subtrees), 4)

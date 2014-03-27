@@ -30,7 +30,7 @@ func (self *Node) findParent(nodes []*Node) *Node {
 func (self Node) toHtml() string {
 	var header string
 
-	if self.position != 0 {
+	if self.headline != "" {
 		header = fmt.Sprintf(
 			"<h%d>%s</h%d>",
 			self.position,

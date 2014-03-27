@@ -48,13 +48,14 @@ func nodesFromFile(path string) []*Node {
 		if len(submatch) > 1 {
 			headline = submatch[2]
 			position = len(submatch[1])
+
 			node = &Node{headline: headline, position: position}
 
 			node.parent = node.findParent(nodes)
 			nodes = append(nodes, node)
 		} else {
 			if len(nodes) == 0 {
-				nodes = []*Node{&Node{section: []string{line}}}
+				nodes = []*Node{&Node{position: 1, section: []string{line}}}
 			} else {
 				lastNode := nodes[len(nodes)-1]
 				lastNode.section = append(lastNode.section, line)
