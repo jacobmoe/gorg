@@ -1,54 +1,55 @@
 package gorg
 
 import "fmt"
+import "encoding/json"
 
 type Tree struct {
-	nodes    []*Node
-	subtrees []*Tree
+	Nodes    []*Node `json:"nodes"`
+	Subtrees []*Tree `json:"subtrees"`
 	parent   *Tree
 }
 
 func NewTree(nodes []*Node) *Tree {
-	tree := Tree{nodes: nodes}
+	tree := Tree{Nodes: nodes}
 	tree.unflatten()
 
 	return &tree
 }
 
 func (self *Tree) addNode(node *Node) {
-	node.parent = node.findParent(self.nodes)
+	node.parent = node.findParent(self.Nodes)
 
 	if node.Position == 0 {
 		node.Position = 1
 	}
 
-	self.nodes = append(self.nodes, node)
+	self.Nodes = append(self.Nodes, node)
 }
 
 func (self *Tree) addSubtree(subtree *Tree) {
 	subtree.parent = self
-	self.subtrees = append(self.subtrees, subtree)
+	self.Subtrees = append(self.Subtrees, subtree)
 }
 
 func (self Tree) isEmpty() bool {
-	return len(self.nodes) == 0
+	return len(self.Nodes) == 0
 }
 
 func (self Tree) lastNode() *Node {
-	return self.nodes[len(self.nodes)-1]
+	return self.Nodes[len(self.Nodes)-1]
 }
 
 func (self Tree) toHtml() string {
 	var html string
 
-	// if top level of tree has nodes,
+	// if top level of tree has Nodes,
 	// top is one, collapsible subtree
-	if len(self.nodes) > 1 {
+	if len(self.Nodes) > 1 {
 		html = "<div class=\"subtree\">"
 	}
 	html = self.subtreesToHtml(html)
 
-	if len(self.nodes) > 1 {
+	if len(self.Nodes) > 1 {
 		html = html + "</div>"
 	}
 
@@ -57,11 +58,11 @@ func (self Tree) toHtml() string {
 
 func (self Tree) subtreesToHtml(html string) string {
 
-	for _, node := range self.nodes {
+	for _, node := range self.Nodes {
 		html = fmt.Sprintf("%s%s", html, node.toHtml())
 	}
 
-	for _, subtree := range self.subtrees {
+	for _, subtree := range self.Subtrees {
 		html = html + "<div class=\"subtree\">"
 		html = subtree.subtreesToHtml(html)
 		html = html + "</div>"
@@ -70,8 +71,14 @@ func (self Tree) subtreesToHtml(html string) string {
 	return html
 }
 
+func (self Tree) toJson() string {
+	json, _ := json.Marshal(self)
+
+	return string(json)
+}
+
 func (self *Tree) indexOfNode(searchNode *Node) int {
-	for i, node := range self.nodes {
+	for i, node := range self.Nodes {
 		if node == searchNode {
 			return i
 		}
@@ -88,26 +95,26 @@ func (self *Tree) deleteNode(node *Node) {
 	}
 
 	if i == 0 {
-		self.nodes = self.nodes[1:]
-	} else if i == len(self.nodes)-1 {
-		self.nodes = self.nodes[:len(self.nodes)-1]
+		self.Nodes = self.Nodes[1:]
+	} else if i == len(self.Nodes)-1 {
+		self.Nodes = self.Nodes[:len(self.Nodes)-1]
 	} else {
-		self.nodes = append(self.nodes[:i], self.nodes[i+1:]...)
+		self.Nodes = append(self.Nodes[:i], self.Nodes[i+1:]...)
 	}
 }
 
 func (self *Tree) unflatten() {
-	subtrees := getSubtrees(self.nodes)
+	subtrees := getSubtrees(self.Nodes)
 
 	for _, s := range subtrees {
 		self.addSubtree(s)
 
-		for _, n := range s.nodes {
+		for _, n := range s.Nodes {
 			self.deleteNode(n)
 		}
 	}
 
-	for _, subtree := range self.subtrees {
+	for _, subtree := range self.Subtrees {
 		subtree.unflatten()
 	}
 }
@@ -121,7 +128,7 @@ func getSubtrees(ns []*Node) []*Tree {
 	root := ns[0]
 	nodes := ns[1:]
 
-	subtree := &Tree{nodes: []*Node{root}}
+	subtree := &Tree{Nodes: []*Node{root}}
 	var subtrees []*Tree
 
 	for _, node := range nodes {
@@ -132,7 +139,7 @@ func getSubtrees(ns []*Node) []*Tree {
 
 			root = node
 
-			subtree = &Tree{nodes: []*Node{root}}
+			subtree = &Tree{Nodes: []*Node{root}}
 
 		}
 
@@ -149,7 +156,7 @@ func getSubtrees(ns []*Node) []*Tree {
 }
 
 func printTree(tree Tree) {
-	for _, node := range tree.nodes {
+	for _, node := range tree.Nodes {
 		line := ""
 		for i := 0; i < node.Position; i++ {
 			line = line + "*"
@@ -159,7 +166,7 @@ func printTree(tree Tree) {
 		fmt.Println(line)
 	}
 
-	for _, subtree := range tree.subtrees {
+	for _, subtree := range tree.Subtrees {
 		printTree(*subtree)
 	}
 }

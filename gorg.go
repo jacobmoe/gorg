@@ -26,6 +26,19 @@ func OrgToHtml(orgPath string) string {
 	return tree.toHtml()
 }
 
+func OrgToJsonFile(orgPath string, jsonPath string) {
+	byteJson := []byte(OrgToJson(orgPath))
+
+	err := ioutil.WriteFile(jsonPath, byteJson, 0644)
+	check(err)
+}
+
+func OrgToJson(orgPath string) string {
+	tree := NewTree(nodesFromFile(orgPath))
+
+	return tree.toJson()
+}
+
 func nodesFromFile(path string) []*Node {
 	file, err := os.Open(path)
 	check(err)
