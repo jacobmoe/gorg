@@ -18,8 +18,8 @@ func NewTree(nodes []*Node) *Tree {
 func (self *Tree) addNode(node *Node) {
 	node.parent = node.findParent(self.nodes)
 
-	if node.position == 0 {
-		node.position = 1
+	if node.Position == 0 {
+		node.Position = 1
 	}
 
 	self.nodes = append(self.nodes, node)
@@ -125,7 +125,7 @@ func getSubtrees(ns []*Node) []*Tree {
 	var subtrees []*Tree
 
 	for _, node := range nodes {
-		if node.position > root.position {
+		if node.Position > root.Position {
 			subtree.addNode(node)
 		} else {
 			subtrees = append(subtrees, subtree)
@@ -151,11 +151,11 @@ func getSubtrees(ns []*Node) []*Tree {
 func printTree(tree Tree) {
 	for _, node := range tree.nodes {
 		line := ""
-		for i := 0; i < node.position; i++ {
+		for i := 0; i < node.Position; i++ {
 			line = line + "*"
 		}
 
-		line = line + " " + node.headline
+		line = line + " " + node.Headline
 		fmt.Println(line)
 	}
 

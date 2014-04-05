@@ -14,34 +14,34 @@ func TestFindParent(t *testing.T) {
 	var parent *Node
 
 	nodes := []*Node{
-		&Node{headline: "headline1", position: 1},
-		&Node{headline: "headline2", position: 2},
-		&Node{headline: "headline3", position: 3},
-		&Node{headline: "headline4", position: 4},
-		&Node{headline: "headline5", position: 3},
-		&Node{headline: "headline6", position: 4},
+		&Node{Headline: "headline1", Position: 1},
+		&Node{Headline: "headline2", Position: 2},
+		&Node{Headline: "headline3", Position: 3},
+		&Node{Headline: "headline4", Position: 4},
+		&Node{Headline: "headline5", Position: 3},
+		&Node{Headline: "headline6", Position: 4},
 	}
 
-	node = Node{position: 1}
+	node = Node{Position: 1}
 	parent = node.findParent(nodes)
 	assert.Equal(t, parent, expected)
 
-	node = Node{position: 2}
+	node = Node{Position: 2}
 	parent = node.findParent(nodes)
 	expected = nodes[0]
 	assert.Equal(t, parent, expected)
 
-	node = Node{position: 3}
+	node = Node{Position: 3}
 	parent = node.findParent(nodes)
 	expected = nodes[1]
 	assert.Equal(t, parent, expected)
 
-	node = Node{position: 4}
+	node = Node{Position: 4}
 	parent = node.findParent(nodes)
 	expected = nodes[4]
 	assert.Equal(t, parent, expected)
 
-	node = Node{position: 5}
+	node = Node{Position: 5}
 	parent = node.findParent(nodes)
 	expected = nodes[5]
 	assert.Equal(t, parent, expected)
@@ -56,23 +56,23 @@ func TestNodeToHtml(t *testing.T) {
 	}{
 		{
 			in: Node{
-				headline: "the headline",
-				position: 1,
-				section:  []string{"the text"},
+				Headline: "the headline",
+				Position: 1,
+				Section:  []string{"the text"},
 			},
 			out: "<h1>the headline</h1><div class=\"level-1\"><p>the text</p></div>",
 		},
 		{
 			in: Node{
-				headline: "the headline3",
-				position: 2,
+				Headline: "the headline3",
+				Position: 2,
 			},
 			out: "<h2>the headline3</h2>",
 		},
 		{
 			in: Node{
-				headline: "the headline3",
-				position: 4,
+				Headline: "the headline3",
+				Position: 4,
 			},
 			out: "<h4>the headline3</h4>",
 		},
@@ -82,4 +82,18 @@ func TestNodeToHtml(t *testing.T) {
 		actual := test.in.toHtml()
 		assert.Equal(t, test.out, actual)
 	}
+}
+
+func TestNodeToJson(t *testing.T) {
+	fmt.Println("==== Node TestJsonToHtml")
+
+	node := Node{
+		Headline: "the headline",
+		Position: 2,
+		Section:  []string{"the text", "more text", "even more"},
+	}
+
+	expected := "{\"headline\":\"the headline\",\"position\":2,\"sections\":[\"the text\",\"more text\",\"even more\"]}"
+
+	assert.Equal(t, expected, node.toJson())
 }
