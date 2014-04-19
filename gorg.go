@@ -62,10 +62,6 @@ func nodesFromFile(path string) []*Node {
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		if len(line) == 0 {
-			continue
-		}
-
 		r, _ := regexp.Compile(`\A([^\ ]\**)\ (.*)`) // should use \S
 		submatch := r.FindStringSubmatch(line)
 
