@@ -71,10 +71,10 @@ func (self Tree) subtreesToHtml(html string) string {
 	return html
 }
 
-func (self Tree) toJson() string {
+func (self Tree) toJson() []byte {
 	json, _ := json.Marshal(self)
 
-	return string(json)
+	return json
 }
 
 func (self *Tree) indexOfNode(searchNode *Node) int {

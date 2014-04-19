@@ -20,6 +20,10 @@ func OrgToHtmlFile(orgPath string, htmlPath string) {
 	check(err)
 }
 
+func TreeFromFile(orgPath string) *Tree {
+	return NewTree(nodesFromFile(orgPath))
+}
+
 func OrgToHtml(orgPath string) string {
 	tree := NewTree(nodesFromFile(orgPath))
 
@@ -33,7 +37,7 @@ func OrgToJsonFile(orgPath string, jsonPath string) {
 	check(err)
 }
 
-func OrgToJson(orgPath string) string {
+func OrgToJson(orgPath string) []byte {
 	tree := NewTree(nodesFromFile(orgPath))
 
 	return tree.toJson()
@@ -55,7 +59,7 @@ func nodesFromFile(path string) []*Node {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		r, _ := regexp.Compile(`\A(\**)\ (.*)`)
+		r, _ := regexp.Compile(`\A([^\ ]\**)\ (.*)`)
 		submatch := r.FindStringSubmatch(line)
 
 		if len(submatch) > 1 {

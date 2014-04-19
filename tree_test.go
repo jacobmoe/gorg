@@ -164,7 +164,7 @@ func TestTreeToJson(t *testing.T) {
 
 	nodes := []*Node{node1, node2, node3, node4, node5, node6}
 	tree := NewTree(nodes)
-	json := tree.toJson()
+	json := string(tree.toJson())
 
 	var tests = []struct {
 		in  string
