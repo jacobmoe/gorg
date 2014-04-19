@@ -56,13 +56,21 @@ func nodesFromFile(path string) []*Node {
 	var nodes []*Node
 	var headline string
 	var position int
+	var section string
+	var isBlock bool
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		r, _ := regexp.Compile(`\A([^\ ]\**)\ (.*)`)
+
+		if len(line) == 0 {
+			continue
+		}
+
+		r, _ := regexp.Compile(`\A([^\ ]\**)\ (.*)`) // should use \S
 		submatch := r.FindStringSubmatch(line)
 
 		if len(submatch) > 1 {
+			isBlock = false
 			headline = submatch[2]
 			position = len(submatch[1])
 
@@ -71,11 +79,25 @@ func nodesFromFile(path string) []*Node {
 			node.parent = node.findParent(nodes)
 			nodes = append(nodes, node)
 		} else {
-			if len(nodes) == 0 {
-				nodes = []*Node{&Node{Position: 1, Section: []string{line}}}
-			} else {
-				lastNode := nodes[len(nodes)-1]
-				lastNode.Section = append(lastNode.Section, line)
+			codeBlockStartReg, _ := regexp.Compile(`\A(\#\+BEGIN_SRC)(.*)`)
+			codeBlockEndReg, _ := regexp.Compile(`\A(\#\+END_SRC)`)
+
+			if codeBlockStartReg.MatchString(line) {
+				isBlock = true
+			} else if codeBlockEndReg.MatchString(line) {
+				isBlock = false
+			}
+
+			section += (line + "\n")
+
+			if !isBlock {
+				if len(nodes) == 0 {
+					nodes = []*Node{&Node{Position: 1, Section: []string{section}}}
+				} else {
+					lastNode := nodes[len(nodes)-1]
+					lastNode.Section = append(lastNode.Section, section)
+				}
+				section = ""
 			}
 		}
 	}
