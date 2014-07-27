@@ -72,7 +72,8 @@ func (self Tree) subtreesToHtml(html string) string {
 }
 
 func (self Tree) toJson() []byte {
-	json, _ := json.Marshal(self)
+	json, err := json.Marshal(self)
+	check(err)
 
 	return json
 }

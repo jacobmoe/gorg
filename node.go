@@ -1,3 +1,9 @@
+/* 
+ * A Node models an org-mode headline with a following section
+ * a section can be comprised of multiple lines
+ * position is the headline's asterisk count
+*/ 
+
 package gorg
 
 import (
@@ -5,9 +11,6 @@ import (
 	"fmt"
 )
 
-// Node represents an org-mode headline with a following section
-// a section can be comprised of multiple lines
-// position is the headline's asterisk count
 type Node struct {
 	Headline string   `json:"headline"`
 	Position int      `json:"position"`
@@ -58,6 +61,8 @@ func (self Node) toHtml() string {
 }
 
 func (self Node) toJson() string {
-	json, _ := json.Marshal(self)
+	json, err := json.Marshal(self)
+	check(err)
+
 	return string(json)
 }

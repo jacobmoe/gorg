@@ -1,3 +1,13 @@
+/*
+ * Converts an org-mode file to a JSON object
+ * The JSON is a recursive structure - it's subtrees all the way down
+ * Subtrees contain nodes and more subtrees. 
+ * Properties of a node:
+ *   sections: Paragraphs and code snippets under a headline. Supports markdown.
+ *   position: The asterisk count on a headline
+ *   headline: The headline
+*/
+
 package gorg
 
 import (
@@ -43,6 +53,9 @@ func OrgToJson(orgPath string) []byte {
 	return tree.toJson()
 }
 
+// read nodes from the file
+// needs to be simplified
+// bug: if a table ends the file, it will not be included
 func nodesFromFile(path string) []*Node {
 	file, err := os.Open(path)
 	check(err)
@@ -58,15 +71,20 @@ func nodesFromFile(path string) []*Node {
 	var position int
 	var section string
 	var isBlock bool
+	var isCodeBlock bool
+	var isTable bool
 
 	for scanner.Scan() {
 		line := scanner.Text()
 
-		r, _ := regexp.Compile(`\A([^\ ]\**)\ (.*)`) // should use \S
+		r := regexp.MustCompile(`\A(\*+)\ (.*)`) // should use \S
 		submatch := r.FindStringSubmatch(line)
 
 		if len(submatch) > 1 {
 			isBlock = false
+			isCodeBlock = false
+			isTable = false
+
 			headline = submatch[2]
 			position = len(submatch[1])
 
@@ -75,16 +93,21 @@ func nodesFromFile(path string) []*Node {
 			node.parent = node.findParent(nodes)
 			nodes = append(nodes, node)
 		} else {
-			codeBlockStartReg, _ := regexp.Compile(`\A(\#\+BEGIN_SRC)(.*)`)
-			codeBlockEndReg, _ := regexp.Compile(`\A(\#\+END_SRC)`)
+			codeStartReg := regexp.MustCompile(`\A(\#\+BEGIN_SRC)(.*)`)
+			codeEndReg := regexp.MustCompile(`\A(\#\+END_SRC)`)
 
-			if codeBlockStartReg.MatchString(line) {
-				isBlock = true
-			} else if codeBlockEndReg.MatchString(line) {
-				isBlock = false
+			tableReg := regexp.MustCompile(`\A\s*\|.*`)
+
+			if codeStartReg.MatchString(line) {
+				isCodeBlock = true
+			} else if codeEndReg.MatchString(line) {
+				isCodeBlock = false
 			}
 
-			section += (line + "\n")
+			isTable = tableReg.MatchString(line) && !isCodeBlock
+			isBlock = isCodeBlock || isTable
+
+			section += line
 
 			if !isBlock {
 				if len(nodes) == 0 {

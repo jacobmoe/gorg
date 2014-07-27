@@ -11,7 +11,7 @@ import (
 
 func TestNodesFromFile(t *testing.T) {
 	fmt.Println("==== gorg TestNodesFromFile")
-	path, _ := filepath.Abs("test/test_file.org")
+	path, _ := filepath.Abs("test/test.org")
 
 	tree := NewTree(nodesFromFile(path))
 
@@ -26,8 +26,8 @@ func TestNodesFromFile(t *testing.T) {
 func TestOrgToHtmlFile(t *testing.T) {
 	fmt.Println("==== gorg testOrgToHtmlFile")
 
-	inPath, _ := filepath.Abs("test/test_file.org")
-	outPath, _ := filepath.Abs("test/test_file.html")
+	inPath, _ := filepath.Abs("test/test.org")
+	outPath, _ := filepath.Abs("test/test.html")
 
 	// remove last test file, if exists
 	if _, err := os.Stat(outPath); err == nil {
@@ -47,8 +47,8 @@ func TestOrgToHtmlFile(t *testing.T) {
 func TestOrgToJsonFile(t *testing.T) {
 	fmt.Println("==== gorg testOrgToJsonFile")
 
-	inPath, _ := filepath.Abs("test/test_file.org")
-	outPath, _ := filepath.Abs("test/test_file.json")
+	inPath, _ := filepath.Abs("test/test.org")
+	outPath, _ := filepath.Abs("test/test.json")
 
 	// remove last test file
 	if _, err := os.Stat(outPath); err == nil {
