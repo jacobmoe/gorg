@@ -3,7 +3,7 @@
  * The JSON is a recursive structure - it's subtrees all the way down
  * Subtrees contain nodes and more subtrees. 
  * Properties of a node:
- *   sections: Paragraphs and code snippets under a headline. Supports markdown.
+ *   sections: Paragraphs and code snippets under a headline.
  *   position: The asterisk count on a headline
  *   headline: The headline
 */
