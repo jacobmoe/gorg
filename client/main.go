@@ -1,15 +1,15 @@
 package main
 
 import (
-	"misc/gorgp"
+	"github.com/jacobmoe/gorg"
 	"os"
 )
 
 func main() {
 	f, _ := os.Open(
-		"/Users/jacobmoe/code/go/src/misc/gorgp/client/ex.org",
+		"/Users/jacobmoe/code/go/src/github.com/jacobmoe/gorg/client/ex.org",
 	)
 	defer f.Close()
 
-	gorgp.Parse(f)
+	gorg.Parse(f)
 }

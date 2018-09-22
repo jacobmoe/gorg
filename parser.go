@@ -1,6 +1,6 @@
 //line parser.y:2
 
-package gorgp
+package gorg
 
 import __yyfmt__ "fmt"
 

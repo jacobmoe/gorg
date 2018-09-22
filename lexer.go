@@ -1,4 +1,4 @@
-package gorgp
+package gorg
 
 import (
 	"bufio"
@@ -63,7 +63,7 @@ func (l *lex) nextItem() *lexItem {
 		next := newLexItem(l.input.Text())
 
 		if next.typ == itemText {
-			l.combine(next)
+			l.combineItem(next)
 			return l.nextItem()
 		}
 
@@ -95,7 +95,7 @@ func (l *lex) lastItem() *lexItem {
 	return last
 }
 
-func (l *lex) combine(next *lexItem) {
+func (l *lex) combineItem(next *lexItem) {
 	l.item.val = fmt.Sprintf(
 		"%s\n%s",
 		l.item.val,

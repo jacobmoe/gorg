@@ -1,6 +1,6 @@
 %{
 
-package gorgp
+package gorg
 
 import (
   "fmt"
