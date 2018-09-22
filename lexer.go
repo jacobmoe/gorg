@@ -63,7 +63,7 @@ func (l *lex) nextItem() *lexItem {
 		next := newLexItem(l.input.Text())
 
 		if next.typ == itemText {
-			concatLexItem(l.item, next)
+			l.combine(next)
 			return l.nextItem()
 		}
 
@@ -95,6 +95,14 @@ func (l *lex) lastItem() *lexItem {
 	return last
 }
 
+func (l *lex) combine(next *lexItem) {
+	l.item.val = fmt.Sprintf(
+		"%s\n%s",
+		l.item.val,
+		next.val,
+	)
+}
+
 var regHeading = regexp.MustCompile(`^(\*+)\ (.*)`)
 
 func newLexItem(s string) *lexItem {
@@ -113,14 +121,6 @@ func newLexItem(s string) *lexItem {
 		typ: itemText,
 		val: s,
 	}
-}
-
-func concatLexItem(primary *lexItem, next *lexItem) {
-	primary.val = fmt.Sprintf(
-		"%s%s",
-		primary.val,
-		next.val,
-	)
 }
 
 func (x *lex) Error(s string) {

@@ -1,0 +1,69 @@
+
+state 0
+	$accept: .main $end 
+
+	i  shift 2
+	.  error
+
+	main  goto 1
+
+state 1
+	$accept:  main.$end 
+
+	$end  accept
+	.  error
+
+
+state 2
+	main:  i.i i i i i 
+
+	i  shift 3
+	.  error
+
+
+state 3
+	main:  i i.i i i i 
+
+	i  shift 4
+	.  error
+
+
+state 4
+	main:  i i i.i i i 
+
+	i  shift 5
+	.  error
+
+
+state 5
+	main:  i i i i.i i 
+
+	i  shift 6
+	.  error
+
+
+state 6
+	main:  i i i i i.i 
+
+	i  shift 7
+	.  error
+
+
+state 7
+	main:  i i i i i i.    (1)
+
+	.  reduce 1 (src line 20)
+
+
+4 terminals, 2 nonterminals
+2 grammar rules, 8/8000 states
+0 shift/reduce, 0 reduce/reduce conflicts reported
+51 working sets used
+memory: parser 0/120000
+0 extra closures
+6 shift entries, 1 exceptions
+1 goto entries
+0 entries saved by goto default
+Optimizer space used: output 7/120000
+7 table entries, 0 zero
+maximum spread: 4, maximum offset: 4
